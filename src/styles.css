@@ -2,5 +2,5 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; font-family: 'Nevera', Arial, Helvetica, sans-serif; background: #fcfaff; }
+body { margin: 0; font-family: 'Didact Gothic', Arial, Helvetica, sans-serif; background: #fcfaff; }
 button, a { -webkit-tap-highlight-color: transparent; }

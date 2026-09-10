@@ -31,10 +31,6 @@ export class App implements OnInit, OnDestroy {
     if (this.clock) clearInterval(this.clock);
   }
 
-  protected scrollToPrograms(): void {
-    document.getElementById('programs')?.scrollIntoView({ behavior: 'smooth' });
-  }
-
   private updateTheme(): void {
     const now = new Date();
     const hour = now.getHours();
