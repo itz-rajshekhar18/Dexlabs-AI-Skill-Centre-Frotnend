@@ -1,3 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; font-family: 'Nevera', Arial, Helvetica, sans-serif; background: #fcfaff; }
+button, a { -webkit-tap-highlight-color: transparent; }

@@ -1,0 +1,31 @@
+<main class="site-shell page-shell" [class.night-mode]="isNight()">
+  <nav class="nav" aria-label="Primary navigation">
+    <a class="brand" routerLink="/" aria-label="Dexlabs AI Skill Centre home"><img class="brand-logo" src="/dexlabs-logo.png" alt="DexLab AI Education" /></a>
+    <div class="nav-links page-nav-links">
+      @for (item of nav; track item.path) { <a [routerLink]="item.path" [class.active]="item.key === key">{{ item.label }}</a> }
+    </div>
+    <a class="back-link" routerLink="/">← Home</a>
+  </nav>
+  <section class="page-hero">
+    <div class="page-hero-copy"><p class="eyebrow"><span></span> {{ content.kicker }}</p><h1>{{ content.title }}</h1><p class="page-intro">{{ content.intro }}</p></div>
+    @if (content.image) { <img class="page-poster" [src]="content.image" [alt]="content.title" /> }
+  </section>
+  <section class="page-grid" [class.art-card-grid]="key === 'art'" aria-label="Highlights">
+    @for (item of content.items; let i = $index; track item) {
+      <article [class.art-card]="key === 'art'" [style.background-image]="key === 'art' ? 'url(' + (content.sections[i].image || content.image) + ')' : null">
+        <div class="art-card-front"><span>0{{ i + 1 }}</span><h2>{{ item }}</h2><b>↗</b></div>
+        @if (key === 'art' && content.sections[i]) { <div class="art-card-details"><p>{{ content.sections[i].body }}</p><div>@for (tag of content.sections[i].items || []; track tag) { <span>{{ tag }}</span> }</div></div> }
+      </article>
+    }
+  </section>
+  <section class="detail-sections">
+    @for (section of content.sections; track section.title) {
+      <article class="detail-section">
+        <div><p class="eyebrow"><span></span> DEXLABS DETAIL</p><h2>{{ section.title }}</h2></div>
+        <div><p class="detail-body">{{ section.body }}</p>@if (section.items) { <div class="detail-list">@for (item of section.items; track item) { <span>{{ item }}</span> }</div> }</div>
+      </article>
+    }
+  </section>
+  <section class="page-cta"><p>{{ content.cta }}</p><a href="mailto:hello@dexlabs.ai">Get in touch ↗</a></section>
+  <footer><p>DEXLABS AI SKILL CENTRE</p><a href="mailto:hello@dexlabs.ai">hello@dexlabs.ai ↗</a></footer>
+</main>
