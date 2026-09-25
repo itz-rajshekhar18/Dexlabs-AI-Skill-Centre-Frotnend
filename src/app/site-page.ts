@@ -1,9 +1,13 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { PaymentService } from './payment.service';
 
 type PageKey = 'school' | 'academic' | 'ai' | 'sports' | 'art' | 'admission' | 'events' | 'about';
 type Section = { title: string; body: string; items?: string[]; image?: string };
-type PageContent = { kicker: string; title: string; intro: string; items: string[]; sections: Section[]; cta: string; image?: string };
+type CardDetail = { body: string; items?: string[] };
+type PageContent = { kicker: string; title: string; intro: string; items: string[]; itemImages?: string[]; itemDetails?: CardDetail[]; sections: Section[]; cta: string; image?: string };
 
 const pageContent: Record<PageKey, PageContent> = {
   school: {
@@ -19,6 +23,12 @@ const pageContent: Record<PageKey, PageContent> = {
     kicker: 'SCHOOL OF ACADEMICS', title: 'Smarter academics. Stronger foundations.',
     intro: 'Structured academic support for Classes 4 to 12, combining teacher-led learning, regular practice, modern technology and AI-powered support.',
     items: ['Classes 4–8 · Foundation', 'Classes 9–10 · Secondary', 'Classes 11–12 · Senior Secondary'],
+    itemImages: ['/banners/academic-foundation.png', '/banners/academic-secondary.png', '/banners/academic-senior-secondary.png'],
+    itemDetails: [
+      { body: 'Build strong academic fundamentals and better learning habits during the early years.', items: ['Concept Clarity', 'Homework Support', 'Subject Practice', 'Strong Fundamentals'] },
+      { body: 'Concept mastery, exam preparation and consistent practice for important board years.', items: ['Board Preparation', 'Subject Support', 'Practice Tests', 'Exam Strategy'] },
+      { body: 'Focused support for advanced concepts, board examinations and future academic goals.', items: ['Advanced Subject Support', 'Board Preparation', 'Practice & Testing', 'Career Awareness'] },
+    ],
     image: '/school-of-academics.png', sections: [
       { title: 'Foundation programme · Classes 4–8', body: 'Build strong academic fundamentals and better learning habits during the early years.', items: ['Concept Clarity', 'Homework Support', 'Subject Practice', 'Strong Fundamentals', 'Regular Assessments', 'Learning Habits', 'Confidence Building', 'AI-Assisted Learning'] },
       { title: 'Secondary programme · Classes 9–10', body: 'Concept mastery, exam preparation and consistent practice for important board years.', items: ['Board Preparation', 'Subject Support', 'Practice Tests', 'Concept Revision', 'Exam Strategy', 'Doubt Solving', 'Performance Analysis'] },
@@ -30,6 +40,14 @@ const pageContent: Record<PageKey, PageContent> = {
     kicker: 'SCHOOL OF AI & FUTURE SKILLS', title: 'Don’t just use AI. Understand it.',
     intro: 'Learn how artificial intelligence works, how to use it responsibly and how to build with emerging technology.',
     items: ['AI Literacy', 'Prompt Engineering', 'Robotics', 'Automation', 'Digital Skills'],
+    itemImages: ['/banners/ai-literacy.png', '/banners/prompt-engineering.png', '/banners/robotics.png', '/banners/automation.png', '/banners/digital-skills.png'],
+    itemDetails: [
+      { body: 'Understand AI concepts, responsible use and the tools shaping everyday learning.', items: ['Introduction to AI', 'Generative AI', 'AI Ethics', 'Future Careers'] },
+      { body: 'Turn clear instructions into useful results through structured prompting and creative experimentation.', items: ['Prompt Patterns', 'Creative Workflows', 'Research Skills', 'Responsible Use'] },
+      { body: 'Build with sensors, code and smart systems through hands-on project learning.', items: ['Sensors', 'Programming', 'Smart Systems', 'Prototype Building'] },
+      { body: 'Connect tools into practical workflows that save time and solve real problems.', items: ['Automation Basics', 'No-Code Tools', 'Workflow Design', 'Problem Solving'] },
+      { body: 'Develop the digital communication, creation and collaboration skills needed for what comes next.', items: ['Digital Communication', 'Content Creation', 'Media Skills', 'Entrepreneurship'] },
+    ],
     image: '/ai-future-skills.png', sections: [
       { title: 'AI is becoming a basic skill.', body: 'Students are growing up in a world where AI will shape education, careers and everyday life. Our literacy programs help them understand tools instead of using them blindly.', items: ['Introduction to AI', 'Generative AI', 'Prompt Engineering', 'AI for Academics', 'AI for Creativity', 'AI Productivity Tools', 'Responsible AI', 'AI Ethics', 'Future Careers', 'Problem Solving With AI'] },
       { title: 'Build. Code. Experiment.', body: 'The AI & Robotics program introduces technology through hands-on projects, problem solving and experimentation.', items: ['Robotics Fundamentals', 'Sensors', 'Automation', 'Programming', 'Smart Systems', 'Prototype Building', 'Logical Thinking', 'Project Development'] },
@@ -40,6 +58,16 @@ const pageContent: Record<PageKey, PageContent> = {
     kicker: 'SCHOOL OF SPORTS', title: 'Train strong. Play smart.',
     intro: 'Structured coaching and fitness programs designed to develop physical ability, discipline and confidence.',
     items: ['Cricket', 'Basketball', 'Skating', 'MMA', 'Yoga', 'Zumba', 'Aerobics'],
+    itemImages: ['/banners/cricket.png', '/banners/basketball.png', '/banners/skating.png', '/banners/mma.png', '/banners/yoga.png', '/banners/zumba.png', '/banners/aerobics.png'],
+    itemDetails: [
+      { body: 'Technical skills, fitness and match awareness through structured coaching.', items: ['Batting', 'Bowling', 'Fielding', 'Match Practice'] },
+      { body: 'Movement, coordination, technique and teamwork for confident players.', items: ['Dribbling', 'Passing', 'Shooting', 'Team Play'] },
+      { body: 'Build balance, speed and confidence through progressive skating practice.', items: ['Balance', 'Coordination', 'Technique', 'Safety'] },
+      { body: 'Develop strength, discipline and self-defence through focused martial arts training.', items: ['Conditioning', 'Technique', 'Discipline', 'Self Defence'] },
+      { body: 'Improve mobility, breathwork and body awareness in every session.', items: ['Flexibility', 'Breathwork', 'Balance', 'Recovery'] },
+      { body: 'Make fitness energetic and approachable through music-led group movement.', items: ['Cardio', 'Rhythm', 'Coordination', 'Energy'] },
+      { body: 'Build stamina and healthy movement patterns with accessible aerobic training.', items: ['Endurance', 'Mobility', 'Strength', 'Consistency'] },
+    ],
     image: '/school-of-sports.png', sections: [
       { title: 'Cricket', body: 'Technical skills, fitness and match awareness through structured coaching.', items: ['Batting', 'Bowling', 'Fielding', 'Fitness', 'Match Practice', 'Technique Development'] },
       { title: 'Basketball', body: 'Movement, coordination, technique and teamwork for confident players.', items: ['Dribbling', 'Passing', 'Shooting', 'Footwork', 'Fitness', 'Team Play'] },
@@ -88,7 +116,7 @@ const pageContent: Record<PageKey, PageContent> = {
   },
 };
 
-@Component({ selector: 'app-site-page', standalone: true, imports: [RouterLink], templateUrl: './site-page.html', styleUrl: './site-page.css' })
+@Component({ selector: 'app-site-page', standalone: true, imports: [RouterLink, FormsModule], templateUrl: './site-page.html', styleUrl: './site-page.css' })
 export class SitePage implements OnInit, OnDestroy {
   protected readonly isNight = signal(false);
   protected readonly nav = [
@@ -97,9 +125,70 @@ export class SitePage implements OnInit, OnDestroy {
   ];
   protected key: PageKey = 'about';
   protected content = pageContent.about;
+  protected paymentName = '';
+  protected paymentEmail = '';
+  protected paymentPhone = '';
+  protected paymentStatus = '';
+  protected isPaymentLoading = false;
   private clock?: ReturnType<typeof setInterval>;
-  constructor(route: ActivatedRoute) { const key = route.snapshot.data['page'] as PageKey; this.key = key; this.content = pageContent[key]; }
+  constructor(route: ActivatedRoute, private readonly paymentService: PaymentService) { const key = route.snapshot.data['page'] as PageKey; this.key = key; this.content = pageContent[key]; }
   ngOnInit(): void { this.updateTheme(); this.clock = setInterval(() => this.updateTheme(), 60_000); }
   ngOnDestroy(): void { if (this.clock) clearInterval(this.clock); }
+  protected cardImage(index: number): string | undefined {
+    return this.key === 'art' ? (this.content.sections[index]?.image || this.content.image) : this.content.itemImages?.[index];
+  }
+  protected cardDetail(index: number): CardDetail | undefined {
+    const detail = this.content.itemDetails?.[index];
+    if (detail) return detail;
+    const section = this.content.sections[index];
+    return section ? { body: section.body, items: section.items } : undefined;
+  }
+  protected async startPayment(): Promise<void> {
+    if (!this.paymentName.trim() || !this.paymentEmail.trim() || !this.paymentPhone.trim()) {
+      this.paymentStatus = 'Please enter your name, email and phone number.';
+      return;
+    }
+
+    this.isPaymentLoading = true;
+    this.paymentStatus = 'Connecting to Razorpay…';
+    try {
+      await this.paymentService.loadCheckout();
+      const order = await firstValueFrom(this.paymentService.createOrder({
+        amount: 100000,
+        currency: 'INR',
+        receipt: `dexlabs_${Date.now()}`,
+        notes: { source: 'admission-page', student_contact: this.paymentEmail.trim() },
+      }));
+
+      this.paymentService.openCheckout({
+        key: order.keyId,
+        amount: order.amount,
+        currency: order.currency,
+        name: 'DexLabs AI Skill Centre',
+        description: 'Admission counselling deposit',
+        order_id: order.orderId,
+        prefill: { name: this.paymentName.trim(), email: this.paymentEmail.trim(), contact: this.paymentPhone.trim() },
+        theme: { color: '#7a32cf' },
+        modal: { ondismiss: () => { this.paymentStatus = 'Payment window closed. You can try again anytime.'; } },
+        handler: async (response) => {
+          this.isPaymentLoading = true;
+          this.paymentStatus = 'Verifying your payment…';
+          try {
+            const result = await firstValueFrom(this.paymentService.verifyPayment(response));
+            this.paymentStatus = result.verified ? 'Payment successful. We will contact you to confirm your counselling session.' : 'Payment could not be verified.';
+          } catch {
+            this.paymentStatus = 'Payment was received, but verification is pending. Please contact hello@dexlabs.ai.';
+          } finally {
+            this.isPaymentLoading = false;
+          }
+        },
+      });
+      this.paymentStatus = 'Complete the payment in the secure Razorpay window.';
+    } catch {
+      this.paymentStatus = 'Payments are unavailable right now. Please try again or contact hello@dexlabs.ai.';
+    } finally {
+      this.isPaymentLoading = false;
+    }
+  }
   private updateTheme(): void { const hour = new Date().getHours(); this.isNight.set(hour >= 18 || hour < 6); }
 }

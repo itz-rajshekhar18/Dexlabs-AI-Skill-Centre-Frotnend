@@ -44,6 +44,25 @@ To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use th
 ng test
 ```
 
+## Razorpay payment API
+
+The Admission page uses the Go API in `backend/` to create Razorpay orders and verify checkout signatures. Razorpay secrets stay server-side; only the public key ID is returned to the browser.
+
+1. Copy `backend/.env.example` to `backend/.env` (or set the same variables in your shell) and fill in your Razorpay Test or Live credentials.
+2. Start the API from PowerShell:
+
+   ```powershell
+   cd backend
+   $env:RAZORPAY_KEY_ID="rzp_test_..."
+   $env:RAZORPAY_KEY_SECRET="..."
+   $env:FRONTEND_ORIGIN="http://localhost:4200"
+   go run .
+   ```
+
+3. Start the Angular app in a second terminal with `npm start`, then open the Admission page and submit the payment form.
+
+The API exposes `GET /api/health`, `POST /api/payments/orders` (the current admission checkout is server-locked to 100000 paise), and `POST /api/payments/verify`. Use HTTPS, a restricted `FRONTEND_ORIGIN`, and Live credentials only in a production deployment.
+
 ## Running end-to-end tests
 
 For end-to-end (e2e) testing, run:

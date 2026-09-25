@@ -11,6 +11,9 @@
 npm-debug.log
 yarn-error.log
 
+# Go payment API secrets
+backend/.env
+
 # IDEs and editors
 .idea/
 .project

@@ -27,6 +27,7 @@
 .detail-body { max-width: 520px; margin: 2.25rem 0; color: var(--muted); font-size: 1.08rem; line-height: 1.5; }
 .detail-list { display: flex; flex-wrap: wrap; gap: .55rem; max-width: 560px; }.detail-list span { padding: .65rem .75rem; border: 1px solid var(--line); color: var(--ink); font-size: .76rem; font-weight: 700; letter-spacing: .03em; }
 .page-cta { max-width: 1360px; margin: auto; padding: 4rem 4.5rem 5rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }.page-cta p { margin: 0; font-size: clamp(2rem, 4vw, 4rem); letter-spacing: -.07em; }.page-cta a { color: var(--page); background: var(--accent); padding: 1rem 1.25rem; text-decoration: none; font-weight: 700; }
+.payment-panel { max-width: 1360px; margin: auto; padding: 4.5rem 4.5rem 5rem; display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 460px); gap: 4rem; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--accent) 8%, transparent); }.payment-panel h2 { max-width: 620px; margin: 0 0 1rem; font-size: clamp(2.8rem, 5vw, 5.5rem); line-height: .88; letter-spacing: -.08em; }.payment-panel > div > p:not(.eyebrow) { max-width: 510px; margin: 0; color: var(--muted); font-size: 1.05rem; line-height: 1.45; }.payment-form { display: grid; gap: .85rem; align-content: start; }.payment-form label { display: grid; gap: .35rem; color: var(--ink); font-size: .78rem; font-weight: 700; letter-spacing: .04em; }.payment-form input { min-height: 2.9rem; padding: 0 .8rem; border: 1px solid var(--line); border-radius: 0; background: var(--page); color: var(--ink); font: inherit; font-size: 1rem; outline: none; }.payment-form input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent); }.payment-button { margin-top: .35rem; min-height: 3.2rem; border: 0; background: var(--accent); color: #fff; cursor: pointer; font: inherit; font-weight: 700; }.payment-button:disabled { cursor: wait; opacity: .6; }.payment-status { margin: .35rem 0 0; color: var(--muted); font-size: .9rem; line-height: 1.35; }
 @media (max-width: 780px) { .page-shell .nav { height: 76px; padding: 0 1.25rem; }.page-shell .nav-links { display: none; }.page-shell .brand-logo { width: 132px; height: 44px; }.back-link { margin-left: auto; }.page-hero { display: block; padding: 5.5rem 1.25rem 4rem; }.page-hero h1 { font-size: clamp(3.6rem, 16vw, 6rem); }.page-poster { max-width: 420px; margin: 3rem auto 0; }.page-grid { padding: 0 1.25rem 4rem; grid-template-columns: 1fr; }.page-grid article { min-height: 180px; border-left: 1px solid var(--line); }.page-grid h2 { margin-top: 3rem; }.art-programs { padding: 0 1.25rem 4rem; grid-template-columns: 1fr; }.art-card { min-height: 320px; background-size: cover; }.art-card::before { opacity: .82; }.art-card-details { position: absolute; transform: none; }.detail-sections { padding: 0 1.25rem; }.detail-section { display: block; padding: 3.5rem 0; }.detail-section h2 { font-size: clamp(2.5rem, 13vw, 5rem); }.detail-body { margin-top: 2rem; }.page-cta { display: block; padding: 3.5rem 1.25rem 4rem; }.page-cta a { display: inline-block; margin-top: 1.5rem; }.page-shell footer { padding: 2.5rem 1.25rem 1.5rem; grid-template-columns: 1fr; }.page-shell footer a { grid-column: auto; } }
 
 /* Arts hover treatment belongs to the primary programme grid. */
@@ -37,7 +38,56 @@
 .page-grid.art-card-grid .art-card-details { position: absolute; inset: auto 0 0; z-index: 2; transform: translateY(100%); padding: 1rem 1.25rem; background: rgba(17,5,28,.92); transition: transform .35s ease; }.page-grid.art-card-grid .art-card-details p { margin: 0 0 .8rem; color: #fff; line-height: 1.35; font-size: .85rem; }.page-grid.art-card-grid .art-card-details > div { display: flex; flex-wrap: wrap; gap: .35rem; }.page-grid.art-card-grid .art-card-details span { border: 1px solid rgba(255,255,255,.45); color: #fff; padding: .32rem .42rem; font-size: .62rem; }.page-grid.art-card-grid .art-card:hover { background-size: cover; transform: translateY(-5px); }.page-grid.art-card-grid .art-card:hover::before { opacity: 1; }.page-grid.art-card-grid .art-card:hover .art-card-details { transform: translateY(0); }
 @media (max-width: 780px) { .page-grid.art-card-grid { grid-template-columns: 1fr; }.page-grid.art-card-grid .art-card { min-height: 320px; background-size: cover; }.page-grid.art-card-grid .art-card::before { opacity: .82; }.page-grid.art-card-grid .art-card-details { position: absolute; transform: none; } }
 
+@media (max-width: 780px) {
+  .payment-panel { display: block; padding: 3.5rem 1.25rem 4rem; }
+  .payment-form { margin-top: 2.5rem; }
+}
+
 /* Routed page cards use the same Nevera treatment as the homepage cards. */
 .page-grid {
   font-family: 'Nevera', Arial, Helvetica, sans-serif;
+}
+
+/* Supplied Academic, AI, and Sports banners become readable route-card backgrounds. */
+.page-grid .banner-card {
+  position: relative;
+  min-height: 315px;
+  padding: 0;
+  overflow: hidden;
+  border-color: var(--line);
+  background-color: var(--page);
+  background-position: center;
+  background-size: 0;
+  background-repeat: no-repeat;
+  transition: background-size .45s ease, transform .25s ease;
+}
+.page-grid .banner-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(160deg, rgba(38, 8, 57, .22), rgba(33, 6, 51, .95));
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+.page-grid .banner-card-front { height: 100%; padding: 1.5rem; position: relative; z-index: 2; }
+.page-grid .banner-card-front span { color: var(--accent); font-size: .7rem; letter-spacing: .1em; }
+.page-grid .banner-card-front h2 { max-width: 270px; margin: 5rem 0 0; color: var(--accent); font-size: clamp(1.4rem, 2.3vw, 2.4rem); line-height: .95; letter-spacing: -.05em; }
+.page-grid .banner-card-front b { position: absolute; right: 1.5rem; bottom: 1.5rem; color: var(--accent); font-size: 1.3rem; }
+.page-grid .banner-card-details { position: absolute; inset: auto 0 0; z-index: 3; transform: translateY(100%); padding: 1rem 1.25rem; background: rgba(17, 5, 28, .92); transition: transform .35s ease; }
+.page-grid .banner-card-details p { margin: 0 0 .8rem; color: #fff; line-height: 1.35; font-size: .85rem; }
+.page-grid .banner-card-details > div { display: flex; flex-wrap: wrap; gap: .35rem; }
+.page-grid .banner-card-details span { border: 1px solid rgba(255, 255, 255, .45); color: #fff; padding: .32rem .42rem; font-size: .62rem; }
+.page-grid .banner-card:hover {
+  background-size: cover;
+  transform: translateY(-5px);
+}
+.page-grid .banner-card:hover::before { opacity: 1; }
+.page-grid .banner-card:hover .banner-card-details { transform: translateY(0); }
+
+@media (max-width: 780px) {
+  .page-grid .banner-card { min-height: 320px; background-size: cover; }
+  .page-grid .banner-card::before { opacity: .82; }
+  .page-grid .banner-card-details { position: absolute; transform: none; }
 }

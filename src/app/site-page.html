@@ -12,12 +12,33 @@
   </section>
   <section class="page-grid" [class.art-card-grid]="key === 'art'" aria-label="Highlights">
     @for (item of content.items; let i = $index; track item) {
-      <article [class.art-card]="key === 'art'" [style.background-image]="key === 'art' ? 'url(' + (content.sections[i].image || content.image) + ')' : null">
-        <div class="art-card-front"><span>0{{ i + 1 }}</span><h2>{{ item }}</h2><b>↗</b></div>
-        @if (key === 'art' && content.sections[i]) { <div class="art-card-details"><p>{{ content.sections[i].body }}</p><div>@for (tag of content.sections[i].items || []; track tag) { <span>{{ tag }}</span> }</div></div> }
+      <article [class.art-card]="key === 'art'" [class.banner-card]="!!content.itemImages" [style.background-image]="cardImage(i) ? 'url(' + cardImage(i) + ')' : null" [attr.aria-label]="item">
+        @if (content.itemImages?.[i]) {
+          <div class="banner-card-front"><span>0{{ i + 1 }}</span><h2>{{ item }}</h2><b>↗</b></div>
+          @if (cardDetail(i); as detail) { <div class="banner-card-details"><p>{{ detail.body }}</p><div>@for (tag of detail.items || []; track tag) { <span>{{ tag }}</span> }</div></div> }
+        } @else {
+          <div class="art-card-front"><span>0{{ i + 1 }}</span><h2>{{ item }}</h2><b>↗</b></div>
+          @if (key === 'art' && content.sections[i]) { <div class="art-card-details"><p>{{ content.sections[i].body }}</p><div>@for (tag of content.sections[i].items || []; track tag) { <span>{{ tag }}</span> }</div></div> }
+        }
       </article>
     }
   </section>
+  @if (key === 'admission') {
+    <section class="payment-panel" aria-labelledby="payment-title">
+      <div>
+        <p class="eyebrow"><span></span> SECURE YOUR COUNSELLING SLOT</p>
+        <h2 id="payment-title">Start with a ₹1,000 admission deposit.</h2>
+        <p>Pay securely through Razorpay. We’ll use your details to confirm the centre visit or counselling session.</p>
+      </div>
+      <form class="payment-form" (ngSubmit)="startPayment()">
+        <label>Name<input type="text" name="paymentName" [(ngModel)]="paymentName" autocomplete="name" required /></label>
+        <label>Email<input type="email" name="paymentEmail" [(ngModel)]="paymentEmail" autocomplete="email" required /></label>
+        <label>Phone<input type="tel" name="paymentPhone" [(ngModel)]="paymentPhone" autocomplete="tel" required /></label>
+        <button class="payment-button" type="submit" [disabled]="isPaymentLoading">{{ isPaymentLoading ? 'Please wait…' : 'Pay ₹1,000 securely ↗' }}</button>
+        @if (paymentStatus) { <p class="payment-status" role="status">{{ paymentStatus }}</p> }
+      </form>
+    </section>
+  }
   <section class="detail-sections">
     @for (section of content.sections; track section.title) {
       <article class="detail-section">
